@@ -21,6 +21,11 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import com.hendrickm.crudpessoa.model.Telefone;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 /**
  *
  * @author Matheus
@@ -60,6 +65,7 @@ public class Pessoa implements Serializable{
     @Column(unique=true, nullable=false)
     private String cpf;
     @Column(nullable=false)
+    @Temporal(TemporalType.DATE)
     private Date dataNascimento;
     @Column(nullable=false)
     private String email;

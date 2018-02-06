@@ -46,6 +46,7 @@ public class PessoaDAO {
         try {
             trans = session.beginTransaction();
             session.save(pessoa);
+            System.out.println(pessoa.getDataNascimento());
             session.flush();
             trans.commit();
         } catch (RuntimeException ex) {

@@ -9,6 +9,7 @@ import com.hendrickm.crudpessoa.model.Pessoa;
 import com.hendrickm.crudpessoa.model.PessoaDAO;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -50,20 +51,31 @@ public class PessoaResource {
     @Consumes("application/json")
     public Response cadastrar(String data) {
         Gson gson = new Gson();
+        
         Pessoa pessoa = gson.fromJson(data, Pessoa.class);
         PessoaDAO pessoaDAO = new PessoaDAO();
         pessoaDAO.cadastrar(pessoa);
-        return Response.status(200).entity("Cadastro realizado.").build();
+        
+        Mensagem msg = new Mensagem("Cadastro realizado");
+        String json =gson.toJson(msg);
+        
+        return Response
+                .status(200)
+                .entity(json)
+                .build();
     }
     
     @GET
-    @Produces("application/json")
-    public String listar() {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response listar() {
         PessoaDAO pessoaDAO = new PessoaDAO();
         List<Pessoa> pessoas = pessoaDAO.listar();
         Gson gson = new Gson();
         String data = gson.toJson(pessoas);     
-        return data;
+        return Response
+            .status(200)
+            .entity(data)
+            .build();
     }
     
     @GET 
@@ -108,9 +120,32 @@ public class PessoaResource {
     public Response deletar(@PathParam("id") long id) {
         PessoaDAO pessoaDAO = new PessoaDAO();
         pessoaDAO.deletar(id);
-        return Response.status(200).entity("Cadastro excluído.").build();
+        
+        
+        Gson gson = new Gson();
+        Mensagem msg = new Mensagem("Cadastro realizado");
+        String json = gson.toJson(msg);
+                
+        
+        
+        return Response.status(200).entity(json).build();
     }
     
-    
+    public class Mensagem{
+        String resultado;
+
+        public Mensagem(String text) {
+            this.resultado = text;
+        }
+
+        public void setText(String text) {
+            this.resultado = text;
+        }
+        
+        
+    }
     
 }
+
+
+    

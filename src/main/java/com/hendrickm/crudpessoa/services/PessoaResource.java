@@ -8,6 +8,7 @@ package com.hendrickm.crudpessoa.services;
 import com.hendrickm.crudpessoa.model.Pessoa;
 import com.hendrickm.crudpessoa.model.PessoaDAO;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
@@ -26,6 +27,7 @@ import javax.ws.rs.core.Response;
 
 import java.lang.reflect.Type;
 import com.google.gson.reflect.TypeToken;
+import com.hendrickm.crudpessoa.model.Mensagem;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.DELETE;
@@ -50,8 +52,10 @@ public class PessoaResource {
     @POST
     @Consumes("application/json")
     public Response cadastrar(String data) {
-        Gson gson = new Gson();
-        
+        Gson gson = new GsonBuilder()
+        .setDateFormat("dd/MM/yyyy")
+        .create();
+
         Pessoa pessoa = gson.fromJson(data, Pessoa.class);
         PessoaDAO pessoaDAO = new PessoaDAO();
         pessoaDAO.cadastrar(pessoa);
@@ -70,12 +74,36 @@ public class PessoaResource {
     public Response listar() {
         PessoaDAO pessoaDAO = new PessoaDAO();
         List<Pessoa> pessoas = pessoaDAO.listar();
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+            .setDateFormat("MM/dd/yyyy")
+            .create();
         String data = gson.toJson(pessoas);     
         return Response
             .status(200)
             .entity(data)
             .build();
+    }
+ 
+    @GET 
+    @Produces("application/json") 
+    @Path("/query") 
+    public Response buscar(@Context UriInfo info) {  
+        String nome = info.getQueryParameters().getFirst("nome");
+        String cpf = info.getQueryParameters().getFirst("cpf");
+        
+        PessoaDAO pessoaDAO = new PessoaDAO();
+        List<Pessoa> pessoas = pessoaDAO.buscar(nome, cpf);
+        
+        Gson gson = new GsonBuilder()
+            .setDateFormat("MM/dd/yyyy")
+            .create();
+        String data = gson.toJson(pessoas);    
+        
+        return Response
+            .status(200)
+            .entity(data)
+            .build();
+        
     }
     
     @GET 
@@ -85,22 +113,10 @@ public class PessoaResource {
         PessoaDAO pessoaDAO = new PessoaDAO();
         Pessoa pessoa = pessoaDAO.buscarPorId(id);
         
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+            .setDateFormat("dd/MM/yyyy")
+            .create();
         String data = gson.toJson(pessoa);
-        
-        return data;
-    }
-    
-    
-    @GET 
-    @Produces("application/json") 
-    @Path("/{nome}/{cpf}") 
-    public String buscar(@PathParam("nome") String nome, @PathParam("cpf") String cpf) {
-        PessoaDAO pessoaDAO = new PessoaDAO();
-        List<Pessoa> pessoas = pessoaDAO.buscar(nome, cpf);
-        
-        Gson gson = new Gson();
-        String data = gson.toJson(pessoas);
         
         return data;
     }
@@ -108,11 +124,22 @@ public class PessoaResource {
     @PUT
     @Consumes("application/json")
     public Response atualizar(String data) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+            .setDateFormat("dd/MM/yyyy")
+            .create();
+        System.out.println("JSONDATA"+data);
+        
         Pessoa pessoa = gson.fromJson(data, Pessoa.class);
         PessoaDAO pessoaDAO = new PessoaDAO();
         pessoaDAO.atualizar(pessoa);
-        return Response.status(200).entity("Cadastro atualizado.").build();
+        
+        Mensagem msg = new Mensagem("Cadastro atualizado");
+        String json =gson.toJson(msg);
+        
+        return Response
+                .status(200)
+                .entity(json)
+                .build();
     }
     
     @DELETE
@@ -120,30 +147,15 @@ public class PessoaResource {
     public Response deletar(@PathParam("id") long id) {
         PessoaDAO pessoaDAO = new PessoaDAO();
         pessoaDAO.deletar(id);
-        
-        
+              
         Gson gson = new Gson();
         Mensagem msg = new Mensagem("Cadastro realizado");
         String json = gson.toJson(msg);
                 
-        
-        
         return Response.status(200).entity(json).build();
     }
     
-    public class Mensagem{
-        String resultado;
-
-        public Mensagem(String text) {
-            this.resultado = text;
-        }
-
-        public void setText(String text) {
-            this.resultado = text;
-        }
-        
-        
-    }
+    
     
 }
 

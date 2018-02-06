@@ -33,30 +33,7 @@ import java.util.Date;
 @Entity
 @Table(name="pessoa")
 public class Pessoa implements Serializable{
-     /*
-   {
-  "nome": "Hendrick",
-  "cpf": "123",
-  "dataNascimento": 2011-01-01,
-  "email":"hend@mail.com",
-  "telefones": [
-    {
-      "ddd": "76",
-      "numero": "123123"
-    },
-    {
-      "ddd": "22",
-      "numero": "213123123"
-    },
-    {
-      "ddd": "22",
-      "numero": "3123123"
-    }
-  ]
-}
-   */ 
-
-    
+     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -65,7 +42,6 @@ public class Pessoa implements Serializable{
     @Column(unique=true, nullable=false)
     private String cpf;
     @Column(nullable=false)
-    @Temporal(TemporalType.DATE)
     private Date dataNascimento;
     @Column(nullable=false)
     private String email;

@@ -67,10 +67,24 @@ public class PessoaDAO {
 
     public List<Pessoa> buscar(String nome, String cpf) {
         session = buildSessionFactory().openSession();
-        Query query = session.createQuery("FROM Pessoa WHERE nome = :nome "
-                                        + "AND cpf = :cpf");
-        query.setParameter("nome", nome);
-        query.setParameter("cpf", cpf);
+        Query query = session.createQuery("FROM Pessoa");
+        
+        if (nome!=null && !nome.isEmpty()) {
+            query = session.createQuery("FROM Pessoa WHERE nome like :nome");
+            query.setParameter("nome", "%" + nome + "%");
+            if(cpf != null &&  !cpf.isEmpty()){
+                System.out.println("ENTREI");
+                query = session.createQuery("FROM Pessoa WHERE nome like :nome AND cpf = :cpf");
+                query.setParameter("nome", "%" + nome + "%");
+                query.setParameter("cpf", cpf);
+            }
+        }
+        
+        else if (cpf != null &&  cpf.isEmpty()) {
+            query = session.createQuery("FROM Pessoa WHERE cpf like :cpf");
+            query.setParameter("cpf", cpf);
+        }
+        
         List resultado = query.list();
         
         return resultado;

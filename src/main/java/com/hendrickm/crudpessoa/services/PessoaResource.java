@@ -127,7 +127,6 @@ public class PessoaResource {
         Gson gson = new GsonBuilder()
             .setDateFormat("dd/MM/yyyy")
             .create();
-        System.out.println("JSONDATA"+data);
         
         Pessoa pessoa = gson.fromJson(data, Pessoa.class);
         PessoaDAO pessoaDAO = new PessoaDAO();

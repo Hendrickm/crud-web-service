@@ -80,7 +80,7 @@ public class PessoaDAO {
             }
         }
         
-        else if (cpf != null &&  cpf.isEmpty()) {
+        else if (cpf != null &&  !cpf.isEmpty()) {
             query = session.createQuery("FROM Pessoa WHERE cpf like :cpf");
             query.setParameter("cpf", cpf);
         }
@@ -104,7 +104,7 @@ public class PessoaDAO {
         Transaction trans = null;
         try {
             trans = session.beginTransaction();
-            session.update(pessoa);
+            session.saveOrUpdate(pessoa);
             session.flush();
             trans.commit();
         } catch (RuntimeException ex) {

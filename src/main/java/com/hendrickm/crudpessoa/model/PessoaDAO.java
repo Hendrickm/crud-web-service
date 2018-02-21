@@ -61,7 +61,7 @@ public class PessoaDAO {
 
     public List<Pessoa> listar() {
         session = buildSessionFactory().openSession();
-        List<Pessoa> resultado = session.createQuery("FROM Pessoa").list();
+        List<Pessoa> resultado =  session.createQuery("FROM Pessoa").list();
         return resultado;
     }
 

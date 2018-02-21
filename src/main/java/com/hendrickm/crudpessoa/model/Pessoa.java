@@ -6,7 +6,6 @@
 package com.hendrickm.crudpessoa.model;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
@@ -21,11 +20,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import com.hendrickm.crudpessoa.model.Telefone;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.util.Date;
+
 /**
  *
  * @author Matheus
